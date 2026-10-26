@@ -19,8 +19,19 @@ defmodule Server do
   defp handle(sock) do
     case :gen_tcp.recv(sock, 0) do
       {:ok, data} ->
-        req = Demo.Request.decode(data)
-        resp = Demo.Response.encode(%Demo.Response{reply: "echo: " <> req.text})
+        req = U01.Request.decode(data)
+
+        resp =
+          case req.text do
+            "time" ->
+              U01.Response.encode(%U01.Response{
+                reply: "time: " <> Calendar.strftime(DateTime.utc_now(), "%Y-%m-%d %H:%M:%S")
+              })
+
+            _ ->
+              U01.Response.encode(%U01.Response{reply: "echo: " <> req.text})
+          end
+
         :gen_tcp.send(sock, resp)
         handle(sock)
 

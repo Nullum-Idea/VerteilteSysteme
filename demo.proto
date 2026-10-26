@@ -1,6 +1,6 @@
 // demo.proto
 syntax = "proto3";
-package demo;
+package u01;
 message Request {
   string text = 1;
 }
